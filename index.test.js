@@ -83,4 +83,28 @@ describe('Band, Musician, and Song Models', () => {
 
         expect(foundMusician).toBe(null);
     })
+
+    test("Band-Musician associations" , async () => {
+        const band = await Band.create({
+            name: 'Band with Musicians',
+            genre: 'Rock',
+        })
+
+        const musician1 = await Musician.create({
+            name: 'Musician 1',
+            instrument: 'Guitar',
+        })
+        const musician2 = await Musician.create({
+            name: 'Musician 2',
+            instrument: 'Drums',
+        })
+
+        await band.addMusician(musician1)
+        await band.addMusician(musician2)
+
+        const bandMusicians = await band.getMusicians()
+        // console.log(JSON.stringify(bandMusicians, null, 2))
+
+        expect(bandMusicians.length).toEqual(2)
+    })
 })
