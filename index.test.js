@@ -1,5 +1,7 @@
 const { sequelize } = require('./db');
 const { Band, Musician, Song } = require('./index')
+const { db } = require('./db.js')
+
 
 describe('Band, Musician, and Song Models', () => {
     /**
@@ -9,36 +11,76 @@ describe('Band, Musician, and Song Models', () => {
         // the 'sync' method will create tables based on the model class
         // by setting 'force:true' the tables are recreated each time the 
         // test suite is run
-        await sequelize.sync({ force: true });
+        await db.sync({ force: true });
     })
 
     test('can create a Band', async () => {
-        // TODO - test creating a band
-        expect('NO TEST').toBe('EXPECTED VALUE HERE');
+        const band = await Band.create({
+            name: 'Test Band 1',
+            genre: 'Test Genre',
+        });
+        expect(band.name).toBe('Test Band 1');
+        expect(band.genre).toBe('Test Genre');
     })
 
     test('can create a Musician', async () => {
-        // TODO - test creating a musician
-        expect('NO TEST').toBe('EXPECTED VALUE HERE');
+        const musician = await Musician.create({
+            name: 'Test Musician 1',
+            instrument: 'Test Instrument',
+        })
+        expect(musician.name).toBe('Test Musician 1');
     })
 
     test('can update a Band', async () => {
-        // TODO - test updating a band
-        expect('NO TEST').toBe('EXPECTED VALUE HERE');
+        const band = await Band.create({
+            name: 'Update Band',
+            genre: 'Update Genre',
+        });
+        await band.update({
+            name: 'Updated Band',
+            genre: 'Updated Genre',
+        });
+
+        expect(band.name).toBe('Updated Band');
+        expect(band.genre).toBe('Updated Genre');
     })
 
     test('can update a Musician', async () => {
-        // TODO - test updating a musician
-        expect('NO TEST').toBe('EXPECTED VALUE HERE');
+        const musician = await Musician.create({
+            name: 'Update Musician',
+            instrument: 'Update Instrument',
+        })
+
+        await musician.update({
+            name: 'Updated Musician',
+            instrument: 'Updated Instrument',
+        });
+
+        expect(musician.name).toBe('Updated Musician');
+        expect(musician.instrument).toBe('Updated Instrument');
     })
 
     test('can delete a Band', async () => {
-        // TODO - test deleting a band
-        expect('NO TEST').toBe('EXPECTED VALUE HERE');
+        const band = await Band.create({
+            name: 'Delete Band',
+            genre: 'Delete Genre',
+        });
+
+        await band.destroy();
+        const foundBand = await Band.findByPk(band.id)
+
+        expect(foundBand).toBe(null);
     })
 
     test('can delete a Musician', async () => {
-        // TODO - test deleting a musician
-        expect('NO TEST').toBe('EXPECTED VALUE HERE');
+        const musician = await Band.create({
+            name: 'Delete Musician',
+            genre: 'Delete Instrument',
+        });
+        
+        await musician.destroy();
+        const foundMusician = await Band.findByPk(musician.id)
+
+        expect(foundMusician).toBe(null);
     })
 })
