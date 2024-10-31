@@ -1,5 +1,5 @@
 const { sequelize } = require('./db');
-const { Band, Musician, Song } = require('./index')
+const { Band, Musician, Song, Manager } = require('./index')
 const { db } = require('./db.js')
 
 
@@ -141,5 +141,30 @@ describe('Band, Musician, and Song Models', () => {
 
         //const musicianSongs = await musician1.getSongs()
         console.log(JSON.stringify(musicianSongs))
+    })
+
+    test("Manager-Band associations", async () => {
+        const band = await Band.create({
+            name: 'Test Band',
+            genre: 'Rock',
+        });
+
+        const manager = await Manager.create({
+            name: 'Test Manager',
+            email: 'manager@test.com',
+            salary: 50000,
+            dateHired: new Date(),
+        });
+
+        await band.setManager(manager);
+
+        const foundBand = await Band.findByPk(band.id, {
+            include: Manager // Include the associated manager
+        });
+
+        // console.log(JSON.stringify(foundBand, null, 2))
+
+        expect(foundBand.Manager).toBeDefined();
+        expect(foundBand.Manager.name).toBe('Test Manager');
     })
 })
