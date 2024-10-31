@@ -12,3 +12,7 @@ class Song extends Model {
         })
     }
 }
+
+module.exports = {
+    Song
+};

@@ -107,4 +107,39 @@ describe('Band, Musician, and Song Models', () => {
 
         expect(bandMusicians.length).toEqual(2)
     })
+
+    test("Musician-Song associations" , async () => {
+        const song1 = await Song.create({
+            title: 'Song 1',
+            year: 2020,
+            length: 3.5,
+        })
+        const song2 = await Song.create({
+            title: 'Song 2',
+            year: 2021,
+            length: 4.0,
+        })
+
+        const musician1 = await Musician.create({
+            name: 'Musician 1',
+            instrument: 'Guitar',
+        })
+        const musician2 = await Musician.create({
+            name: 'Musician 2',
+            instrument: 'Drums',
+        })
+
+        await musician1.addSongs(song1)
+        await musician1.addSongs(song2)
+        const musicianSongs = await musician1.getSongs()
+        expect(musicianSongs.length).toBe(2)
+        
+        await song1.addMusicians(musician1)
+        await song1.addMusicians(musician2)
+        const songMusicians = await song1.getMusicians()
+        expect(songMusicians.length).toBe(2)
+
+        //const musicianSongs = await musician1.getSongs()
+        console.log(JSON.stringify(musicianSongs))
+    })
 })
